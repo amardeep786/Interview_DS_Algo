@@ -52,3 +52,58 @@ public:
         
     }
 };
+
+// ----------------------------------------- JAVA CODE ------------------------------------------------------------------------------------//
+
+class Solution {
+    public List<String> restoreIpAddresses(String s) {
+        List<String> res = new ArrayList<>();
+        int n = s.length();
+
+        if (n > 12 || n < 4) {
+            return res;
+        }
+
+        solve(s, 0, 0, res, "");
+        return res;
+    }
+
+    public void solve(String s, int idx, int parts, List<String> res, String curr) {
+        int n = s.length();
+
+        if (idx == n && parts == 4) {
+            // Remove the last dot before adding to the result
+            res.add(curr.substring(0, curr.length() - 1));
+            return;
+        }
+
+        // If there are too many parts or we've gone beyond the length of the string
+        if (parts >= 4 || idx >= n) {
+            return;
+        }
+
+        // Try length 1
+        if (idx + 1 <= n) {
+            solve(s, idx + 1, parts + 1, res, curr + s.substring(idx, idx + 1) + ".");
+        }
+
+        // Try length 2
+        if (idx + 2 <= n && isValid(s.substring(idx, idx + 2))) {
+            solve(s, idx + 2, parts + 1, res, curr + s.substring(idx, idx + 2) + ".");
+        }
+
+        // Try length 3
+        if (idx + 3 <= n && isValid(s.substring(idx, idx + 3))) {
+            solve(s, idx + 3, parts + 1, res, curr + s.substring(idx, idx + 3) + ".");
+        }
+    }
+
+    public boolean isValid(String str) {
+        if (str.length() > 1 && str.charAt(0) == '0') {
+            return false; // Leading zeros are not allowed except for "0"
+        }
+
+        int value = Integer.parseInt(str);
+        return value >= 0 && value <= 255;
+    }
+}
